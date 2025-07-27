@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fynd - Job Search Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+        }
+        .glass-button {
+            background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .swipe-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .nav-item.active {
+            color: #ec4899;
+        }
+        .nav-item:not(.active) {
+            color: #6b7280;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-25%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: none;
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-50 via-blue-50 to-purple-50">
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <!-- Animated background gradients -->
+        <div class="absolute inset-0 bg-gradient-to-br from-pink-100/30 via-blue-100/30 to-purple-100/30 animate-pulse"></div>
+        <div class="absolute top-20 left-20 w-32 h-32 bg-pink-200/20 rounded-full blur-xl"></div>
+        <div class="absolute bottom-20 right-20 w-40 h-40 bg-purple-200/20 rounded-full blur-xl"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-blue-200/20 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 text-center">
+            <!-- Logo -->
+            <div class="mb-8">
+                <div class="w-24 h-24 mx-auto bg-gradient-to-br from-pink-400 to-purple-500 rounded-3xl flex items-center justify-center shadow-2xl">
+                    <span class="text-4xl">✨</span>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-4xl md:text-6xl font-bold text-gradient mb-4">
+                Fynd
+            </h1>
+
+            <p class="text-xl text-gray-600 mb-12 max-w-md mx-auto">
+                Job search made simple. Swipe your way to your dream career.
+            </p>
+
+            <!-- User Type Selection -->
+            <div class="space-y-4 max-w-sm mx-auto">
+                <div class="glass-card p-6 cursor-pointer group hover:bg-white/30 transition-all duration-200">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center">
+                            <span class="text-2xl">💼</span>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-lg font-semibold text-gray-800">Job Seeker</h3>
+                            <p class="text-sm text-gray-600">Find your perfect job match</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 cursor-pointer group hover:bg-white/30 transition-all duration-200">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center">
+                            <span class="text-2xl">👥</span>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-lg font-semibold text-gray-800">Recruiter</h3>
+                            <p class="text-sm text-gray-600">Find the perfect candidate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Started Button -->
+            <div class="mt-8">
+                <button onclick="showDashboard()" class="glass-button text-lg px-8 py-4">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="min-h-screen bg-gradient-to-br from-pink-50 via-blue-50 to-purple-50 pb-20 hidden">
+        <!-- Header -->
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-gradient text-center">Find Your Dream Job</h1>
+        </div>
+
+        <!-- Job Card -->
+        <div class="px-6 flex-1 flex items-center justify-center">
+            <div class="w-full max-w-sm">
+                <div class="swipe-card h-96 relative cursor-grab active:cursor-grabbing">
+                    <!-- Card Content -->
+                    <div class="p-6 h-full flex flex-col">
+                        <!-- Company Logo -->
+                        <div class="text-right mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-500 rounded-2xl flex items-center justify-center text-2xl">
+                                🏢
+                            </div>
+                        </div>
+
+                        <!-- Job Info -->
+                        <div class="flex-1">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-2">Senior Product Designer</h2>
+                            <div class="flex items-center text-gray-600 mb-3">
+                                <span class="mr-1">🏢</span>
+                                <span>TechCorp</span>
+                            </div>
+                            <div class="flex items-center text-gray-600 mb-3">
+                                <span class="mr-1">📍</span>
+                                <span>San Francisco, CA</span>
+                            </div>
+                            <div class="flex items-center text-gray-600 mb-4">
+                                <span class="mr-1">💰</span>
+                                <span>$120k - $150k</span>
+                            </div>
+                            
+                            <p class="text-gray-700 mb-4">Join our team to create beautiful, user-centered digital experiences. We're looking for someone with 5+ years of experience in product design.</p>
+                            
+                            <!-- Tags -->
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    UI/UX
+                                </span>
+                                <span class="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    Figma
+                                </span>
+                                <span class="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    Product Design
+                                </span>
+                                <span class="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    Remote
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center space-x-6 p-6">
+            <button onclick="swipeLeft()" class="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                <span class="text-3xl">❌</span>
+            </button>
+            
+            <button onclick="swipeRight()" class="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                <span class="text-3xl">❤️</span>
+            </button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="flex justify-around items-center h-16 px-4">
+                <div class="nav-item active">
+                    <span class="text-2xl mb-1">🏠</span>
+                    <span class="text-xs">Swipe</span>
+                </div>
+                <div class="nav-item">
+                    <span class="text-2xl mb-1">💖</span>
+                    <span class="text-xs">Matches</span>
+                </div>
+                <div class="nav-item">
+                    <span class="text-2xl mb-1">👤</span>
+                    <span class="text-xs">Profile</span>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Match Confirmation Modal -->
+    <div id="match-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="glass-card p-8 text-center max-w-sm mx-4">
+            <div class="w-20 h-20 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <span class="text-4xl">❤️</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">You Applied!</h3>
+            <p class="text-gray-600 mb-4">Your application has been sent to TechCorp</p>
+            <button onclick="closeMatchModal()" class="glass-button">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function showDashboard() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.remove('hidden');
+        }
+
+        function swipeLeft() {
+            const card = document.querySelector('.swipe-card');
+            card.style.transform = 'translateX(-100vw) rotate(-20deg)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.style.transform = 'translateX(0) rotate(0deg)';
+                card.style.opacity = '1';
+            }, 300);
+        }
+
+        function swipeRight() {
+            const card = document.querySelector('.swipe-card');
+            card.style.transform = 'translateX(100vw) rotate(20deg)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.style.transform = 'translateX(0) rotate(0deg)';
+                card.style.opacity = '1';
+                showMatchModal();
+            }, 300);
+        }
+
+        function showMatchModal() {
+            document.getElementById('match-modal').classList.remove('hidden');
+        }
+
+        function closeMatchModal() {
+            document.getElementById('match-modal').classList.add('hidden');
+        }
+
+        // Add touch/swipe support
+        let startX = 0;
+        let startY = 0;
+        let endX = 0;
+        let endY = 0;
+
+        const card = document.querySelector('.swipe-card');
+        
+        card.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        card.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+            
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    swipeRight();
+                } else {
+                    swipeLeft();
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

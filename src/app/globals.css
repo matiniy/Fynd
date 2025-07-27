@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 min-h-screen;
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/20 backdrop-blur-md border border-white/30 rounded-3xl shadow-lg;
+  }
+  
+  .glass-button {
+    @apply bg-white/20 backdrop-blur-md border border-white/30 rounded-full px-6 py-3 font-medium shadow-lg hover:bg-white/30 transition-all duration-200;
+  }
+  
+  .gradient-bg {
+    @apply bg-gradient-to-br from-primary-100/50 via-secondary-100/50 to-accent-100/50;
+  }
+  
+  .swipe-card {
+    @apply relative w-full max-w-sm mx-auto bg-white/20 backdrop-blur-md border border-white/30 rounded-3xl shadow-xl overflow-hidden;
+    transform-style: preserve-3d;
+  }
+  
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  .swipe-overlay {
+    @apply absolute inset-0 flex items-center justify-center text-4xl font-bold;
+  }
+  
+  .swipe-left-overlay {
+    @apply bg-red-500/20 text-red-600;
+  }
+  
+  .swipe-right-overlay {
+    @apply bg-green-500/20 text-green-600;
+  }
+  
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white/20 backdrop-blur-md border-t border-white/30;
+  }
+  
+  .nav-item {
+    @apply flex flex-col items-center justify-center py-2 px-4 text-sm font-medium transition-all duration-200;
+  }
+  
+  .nav-item.active {
+    @apply text-primary-600;
+  }
+  
+  .nav-item:not(.active) {
+    @apply text-gray-600;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent;
+  }
+  
+  .animate-swipe-left {
+    animation: swipeLeft 0.3s ease-out forwards;
+  }
+  
+  .animate-swipe-right {
+    animation: swipeRight 0.3s ease-out forwards;
+  }
+} 
