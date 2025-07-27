@@ -1,12 +1,6 @@
 {
   "version": 2,
   "name": "fynd-job-search",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
   "routes": [
     {
       "src": "/manifest.json",
