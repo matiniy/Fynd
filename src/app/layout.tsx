@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Fynd - Job Search Made Simple',
   description: 'Tinder-style job search platform for job seekers and recruiters',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover',
 }
 
 export default function RootLayout({
@@ -24,9 +25,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Fynd" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50">
+        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 safe-area-top safe-area-bottom">
           {children}
         </div>
         <script

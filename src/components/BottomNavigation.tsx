@@ -33,7 +33,7 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
 
   return (
     <nav className="bottom-nav">
-      <div className="flex justify-around items-center h-16 px-4">
+      <div className="flex justify-around items-center h-16 px-2 sm:px-4">
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive = activeTab === item.id
@@ -45,8 +45,8 @@ export default function BottomNavigation({ activeTab }: BottomNavigationProps) {
                 whileTap={{ scale: 0.9 }}
                 className={`nav-item ${isActive ? 'active' : ''}`}
               >
-                <Icon className={`w-6 h-6 mb-1 ${isActive ? 'text-primary-600' : 'text-gray-600'}`} />
-                <span className={`text-xs ${isActive ? 'text-primary-600' : 'text-gray-600'}`}>
+                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1 ${isActive ? 'text-primary-600' : 'text-gray-600'}`} />
+                <span className={`text-xs sm:text-sm ${isActive ? 'text-primary-600' : 'text-gray-600'}`}>
                   {item.label}
                 </span>
                 {isActive && (
