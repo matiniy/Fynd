@@ -2,6 +2,8 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { ThemeProvider } from './contexts/ThemeContext'
+import ThemeToggle from '@/components/ThemeToggle'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,26 +32,29 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 safe-area-top safe-area-bottom">
-          {children}
-        </div>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
-        />
+        <ThemeProvider>
+          <div className="min-h-screen gradient-bg safe-area-top safe-area-bottom">
+            <ThemeToggle />
+            {children}
+          </div>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js')
+                      .then(function(registration) {
+                        console.log('SW registered: ', registration);
+                      })
+                      .catch(function(registrationError) {
+                        console.log('SW registration failed: ', registrationError);
+                      });
+                  });
+                }
+              `,
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   )

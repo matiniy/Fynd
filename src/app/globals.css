@@ -5,6 +5,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
+  :root {
+    /* Light theme colors */
+    --bg-primary: 248 250 252;
+    --bg-secondary: 241 245 249;
+    --bg-accent: 238 242 255;
+    --text-primary: 15 23 42;
+    --text-secondary: 71 85 105;
+    --text-muted: 148 163 184;
+    --border-primary: 226 232 240;
+    --border-secondary: 203 213 225;
+    --card-bg: 255 255 255;
+    --card-border: 226 232 240;
+    --shadow-color: 0 0 0;
+    --shadow-opacity: 0.1;
+  }
+
+  [data-theme="dark"] {
+    /* Dark theme colors */
+    --bg-primary: 15 23 42;
+    --bg-secondary: 30 41 59;
+    --bg-accent: 30 58 138;
+    --text-primary: 248 250 252;
+    --text-secondary: 203 213 225;
+    --text-muted: 148 163 184;
+    --border-primary: 51 65 85;
+    --border-secondary: 71 85 105;
+    --card-bg: 30 41 59;
+    --card-border: 51 65 85;
+    --shadow-color: 0 0 0;
+    --shadow-opacity: 0.3;
+  }
+
   html {
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
@@ -13,11 +45,10 @@
   }
   
   body {
-    @apply bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 min-h-screen;
-    background-attachment: fixed;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+    @apply min-h-screen;
+    background: rgb(var(--bg-primary));
+    color: rgb(var(--text-primary));
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Mobile-optimized text sizes */
@@ -40,22 +71,32 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-xl sm:rounded-2xl shadow-sm;
+    @apply backdrop-blur-sm border rounded-xl sm:rounded-2xl shadow-sm;
+    background: rgb(var(--card-bg) / 0.9);
+    border-color: rgb(var(--card-border) / 0.5);
   }
   
   .glass-button {
-    @apply bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-medium shadow-sm hover:bg-white/95 transition-all duration-200 text-sm sm:text-base;
+    @apply backdrop-blur-sm border rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-medium shadow-sm transition-all duration-200 text-sm sm:text-base;
+    background: rgb(var(--card-bg) / 0.9);
+    border-color: rgb(var(--card-border) / 0.5);
+  }
+  
+  .glass-button:hover {
+    background: rgb(var(--card-bg) / 0.95);
   }
   
   .gradient-bg {
-    @apply bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50;
+    background: linear-gradient(135deg, rgb(var(--bg-primary)), rgb(var(--bg-secondary)), rgb(var(--bg-accent)));
   }
   
   .swipe-card {
-    @apply relative w-full max-w-[280px] sm:max-w-[320px] mx-auto bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden;
+    @apply relative w-full max-w-[280px] sm:max-w-[320px] mx-auto backdrop-blur-sm border rounded-xl sm:rounded-2xl shadow-sm overflow-hidden;
     transform-style: preserve-3d;
     min-height: 320px;
     max-height: 400px;
+    background: rgb(var(--card-bg) / 0.95);
+    border-color: rgb(var(--card-border) / 0.5);
   }
   
   .perspective-1000 {
@@ -80,7 +121,9 @@
   }
   
   .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-200/50 z-50;
+    @apply fixed bottom-0 left-0 right-0 backdrop-blur-sm border-t z-50;
+    background: rgb(var(--card-bg) / 0.9);
+    border-color: rgb(var(--border-primary) / 0.5);
     padding-bottom: env(safe-area-inset-bottom);
   }
   
@@ -94,7 +137,7 @@
   }
   
   .nav-item:not(.active) {
-    @apply text-gray-600;
+    color: rgb(var(--text-secondary));
   }
 
   /* Mobile-optimized containers */
@@ -186,6 +229,23 @@
 
   .warning-gradient {
     @apply bg-gradient-to-r from-yellow-500 to-orange-500;
+  }
+
+  /* Dark mode specific styles */
+  .dark-mode-toggle {
+    @apply fixed top-4 right-4 z-50 w-10 h-10 rounded-full backdrop-blur-sm border flex items-center justify-center transition-all duration-200;
+    background: rgb(var(--card-bg) / 0.9);
+    border-color: rgb(var(--card-border) / 0.5);
+  }
+
+  .dark-mode-toggle:hover {
+    background: rgb(var(--card-bg) / 0.95);
+    transform: scale(1.05);
+  }
+
+  /* Theme transition */
+  * {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 }
 
