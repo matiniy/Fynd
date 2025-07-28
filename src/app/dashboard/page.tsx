@@ -3,8 +3,10 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSwipeable } from 'react-swipeable'
-import { Heart, X, MapPin, DollarSign, Building, Star, Crown, Zap, Lock, Eye } from 'lucide-react'
+import { Heart, X, MapPin, DollarSign, Building, Star, Crown, Zap, Lock, Eye, LogOut } from 'lucide-react'
 import BottomNavigation from '@/components/BottomNavigation'
+import ProtectedRoute from '@/components/ProtectedRoute'
+import { useAuth } from '../contexts/AuthContext'
 
 // Mock user data with subscription status
 const mockUser = {
@@ -122,7 +124,9 @@ export default function Dashboard() {
   const [isCardFlipped, setIsCardFlipped] = useState(false)
   const [showSwipeLimit, setShowSwipeLimit] = useState(false)
   const [showPremiumUpsell, setShowPremiumUpsell] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
+  const { user, logout } = useAuth()
   const currentJob = mockJobs[currentJobIndex]
 
   const handleSwipe = (direction: 'left' | 'right') => {
@@ -171,510 +175,580 @@ export default function Dashboard() {
 
   if (currentJobIndex >= mockJobs.length) {
     return (
-      <div className="min-h-screen gradient-bg pb-20 safe-area-bottom">
-        <div className="mobile-padding">
-          <h1 className="text-xl sm:text-2xl font-bold text-gradient mb-2">Find Your Dream Job</h1>
-          <p className="mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>Swipe through job opportunities</p>
-        </div>
-        
-        <div className="flex items-center justify-center h-48 sm:h-64">
-          <div className="text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="w-16 h-16 sm:w-20 sm:h-20 primary-gradient rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4"
-            >
-              <Star className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-            </motion.div>
-            <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>No More Jobs</h3>
-            <p className="mobile-text-base mb-4" style={{ color: 'rgb(var(--text-secondary))' }}>You've seen all available jobs for today</p>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setCurrentJobIndex(0)}
-              className="mobile-button glass-button primary-gradient text-white"
-            >
-              Refresh Jobs
-            </motion.button>
+      <ProtectedRoute userType="jobseeker">
+        <div className="min-h-screen gradient-bg pb-20 safe-area-bottom">
+          <div className="mobile-padding">
+            <h1 className="text-xl sm:text-2xl font-bold text-gradient mb-2">Find Your Dream Job</h1>
+            <p className="mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>Swipe through job opportunities</p>
           </div>
+          
+          <div className="flex items-center justify-center h-48 sm:h-64">
+            <div className="text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="w-16 h-16 sm:w-20 sm:h-20 primary-gradient rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4"
+              >
+                <Star className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+              </motion.div>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>No More Jobs</h3>
+              <p className="mobile-text-base mb-4" style={{ color: 'rgb(var(--text-secondary))' }}>You've seen all available jobs for today</p>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setCurrentJobIndex(0)}
+                className="mobile-button glass-button primary-gradient text-white"
+              >
+                Refresh Jobs
+              </motion.button>
+            </div>
+          </div>
+          <BottomNavigation activeTab="home" />
         </div>
-        <BottomNavigation activeTab="home" />
-      </div>
+      </ProtectedRoute>
     )
   }
 
   return (
-    <div className="min-h-screen gradient-bg pb-20 safe-area-bottom">
-      {/* Header with Swipe Counter */}
-      <div className="mobile-padding">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold text-gradient">Find Your Dream Job</h1>
-            <p className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Swipe through job opportunities</p>
-          </div>
-          <div className="text-right flex-shrink-0 ml-3">
-            <div className="flex items-center space-x-2">
-              {!mockUser.isPremium && (
-                <div className="flex items-center space-x-1 glass-card rounded-full px-2 sm:px-3 py-1">
-                  <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
-                  <span className="text-xs sm:text-sm font-medium" style={{ color: 'rgb(var(--text-secondary))' }}>
-                    {mockUser.swipesRemaining}/{mockUser.swipesLimit}
-                  </span>
-                </div>
-              )}
-              {mockUser.isPremium && (
-                <div className="flex items-center space-x-1 warning-gradient rounded-full px-2 sm:px-3 py-1">
-                  <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  <span className="text-xs sm:text-sm font-medium text-white">PRO</span>
-                </div>
-              )}
+    <ProtectedRoute userType="jobseeker">
+      <div className="min-h-screen gradient-bg pb-20 safe-area-bottom">
+        {/* Header with User Info and Logout */}
+        <div className="mobile-padding">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gradient">Find Your Dream Job</h1>
+              <p className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Swipe through job opportunities</p>
             </div>
-          </div>
-        </div>
-
-        {/* Premium Upsell Banner */}
-        {!mockUser.isPremium && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass-card mobile-card mb-4 border border-yellow-200/50"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3 flex-1 min-w-0">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 warning-gradient rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold mobile-text-base" style={{ color: 'rgb(var(--text-primary))' }}>Upgrade to Pro</h3>
-                  <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Unlimited swipes & premium features</p>
+            <div className="flex items-center space-x-3">
+              {/* User Info */}
+              <div className="text-right flex-shrink-0">
+                <div className="flex items-center space-x-2">
+                  {!mockUser.isPremium && (
+                    <div className="flex items-center space-x-1 glass-card rounded-full px-2 sm:px-3 py-1">
+                      <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+                      <span className="text-xs sm:text-sm font-medium" style={{ color: 'rgb(var(--text-secondary))' }}>
+                        {mockUser.swipesRemaining}/{mockUser.swipesLimit}
+                      </span>
+                    </div>
+                  )}
+                  {mockUser.isPremium && (
+                    <div className="flex items-center space-x-1 warning-gradient rounded-full px-2 sm:px-3 py-1">
+                      <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                      <span className="text-xs sm:text-sm font-medium text-white">PRO</span>
+                    </div>
+                  )}
                 </div>
               </div>
+              
+              {/* Logout Button */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowPremiumUpsell(true)}
-                className="px-3 py-1.5 sm:px-4 sm:py-2 warning-gradient text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium flex-shrink-0"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowLogoutConfirm(true)}
+                className="w-8 h-8 sm:w-10 sm:h-10 glass-card rounded-full flex items-center justify-center"
+                style={{ color: 'rgb(var(--text-secondary))' }}
               >
-                $4.99/mo
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.button>
             </div>
-          </motion.div>
-        )}
-      </div>
+          </div>
 
-      {/* Job Card */}
-      <div className="mobile-container flex-1 flex items-center justify-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentJob.id}
-            initial={{ scale: 0.9, opacity: 0, y: 10 }}
-            animate={{ 
-              scale: 1, 
-              opacity: 1,
-              y: 0,
-              rotate: swipeDirection === 'left' ? -15 : swipeDirection === 'right' ? 15 : 0,
-              x: swipeDirection === 'left' ? -800 : swipeDirection === 'right' ? 800 : 0
-            }}
-            exit={{ scale: 0.9, opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 30 }}
-            whileHover={{ scale: 1.01 }}
-            className="w-full max-w-[280px] sm:max-w-[320px] perspective-1000"
-            {...handlers}
-          >
-            <div 
-              className="swipe-card relative cursor-pointer overflow-hidden"
-              onClick={handleCardClick}
+          {/* Premium Upsell Banner */}
+          {!mockUser.isPremium && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass-card mobile-card mb-4 border border-yellow-200/50"
             >
-              {/* Featured/Urgent Badge */}
-              {(currentJob.isFeatured || currentJob.urgent) && (
-                <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20">
-                  {currentJob.isFeatured && (
-                    <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium flex items-center space-x-1">
-                      <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span>Featured</span>
-                    </div>
-                  )}
-                  {currentJob.urgent && (
-                    <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium mt-1 sm:mt-2">
-                      Urgent Hire
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Swipe Overlay */}
-              {swipeDirection && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className={`absolute inset-0 flex items-center justify-center text-3xl sm:text-4xl font-bold z-20 ${
-                    swipeDirection === 'left' 
-                      ? 'bg-red-500/10 text-red-600' 
-                      : 'bg-green-500/10 text-green-600'
-                  }`}
-                >
-                  {swipeDirection === 'left' ? '❌' : '✅'}
-                </motion.div>
-              )}
-
-              {/* Card Container with Flip Animation */}
-              <motion.div
-                animate={{ rotateY: isCardFlipped ? 180 : 0 }}
-                transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
-                className="w-full h-full relative"
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                {/* Front Side */}
-                <div className="absolute inset-0 w-full h-full backface-hidden">
-                  <div className="p-4 sm:p-5 h-full flex flex-col relative">
-                    {/* Background */}
-                    <div className="absolute inset-0 rounded-xl sm:rounded-2xl" style={{ background: 'rgb(var(--card-bg) / 0.95)' }} />
-                    
-                    {/* Company Logo */}
-                    <div className="text-right mb-3 sm:mb-4 relative z-10">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 primary-gradient rounded-lg sm:rounded-xl flex items-center justify-center text-xl sm:text-2xl shadow-sm">
-                        {currentJob.logo}
-                      </div>
-                    </div>
-
-                    {/* Job Info */}
-                    <div className="flex-1 relative z-10">
-                      <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 leading-tight" style={{ color: 'rgb(var(--text-primary))' }}>{currentJob.title}</h2>
-                      
-                      <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
-                        <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
-                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-                            <Building className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
-                          </div>
-                          <span className="font-medium mobile-text-sm truncate">{currentJob.company}</span>
-                        </div>
-                        
-                        <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
-                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-                            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          </div>
-                          <span className="font-medium mobile-text-sm truncate">{currentJob.location}</span>
-                        </div>
-                        
-                        <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
-                          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
-                            <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
-                          </div>
-                          <span className="font-medium mobile-text-sm truncate">{currentJob.salary}</span>
-                        </div>
-                      </div>
-                      
-                      <p className="mb-3 sm:mb-4 leading-relaxed mobile-text-sm line-clamp-3" style={{ color: 'rgb(var(--text-secondary))' }}>{currentJob.description}</p>
-                      
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1 sm:gap-1.5">
-                        {currentJob.tags.slice(0, 3).map((tag, index) => (
-                          <motion.span
-                            key={index}
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: index * 0.05 }}
-                            className="primary-gradient text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium shadow-sm"
-                          >
-                            {tag}
-                          </motion.span>
-                        ))}
-                        {currentJob.tags.length > 3 && (
-                          <span className="text-xs px-2 py-1" style={{ color: 'rgb(var(--text-muted))' }}>+{currentJob.tags.length - 3} more</span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Tap to Flip Hint */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-40">
-                      <div className="text-center">
-                        <div className="text-sm sm:text-base">👆</div>
-                        <div className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Tap for details</div>
-                      </div>
-                    </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 warning-gradient rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold mobile-text-base" style={{ color: 'rgb(var(--text-primary))' }}>Upgrade to Pro</h3>
+                    <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Unlimited swipes & premium features</p>
                   </div>
                 </div>
-
-                {/* Back Side */}
-                <div className="absolute inset-0 w-full h-full backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
-                  <div className="p-4 sm:p-5 h-full flex flex-col relative">
-                    {/* Background */}
-                    <div className="absolute inset-0 rounded-xl sm:rounded-2xl" style={{ background: 'rgb(var(--card-bg) / 0.95)' }} />
-                    
-                    {/* Back Header */}
-                    <div className="text-center mb-3 sm:mb-4 relative z-10">
-                      <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Job Details</h3>
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 primary-gradient rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-xl mx-auto">
-                        {currentJob.logo}
-                      </div>
-                    </div>
-
-                    {/* Detailed Job Info */}
-                    <div className="flex-1 relative z-10 space-y-2 sm:space-y-3">
-                      <div>
-                        <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Requirements</h4>
-                        <ul className="space-y-1 sm:space-y-1.5 mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
-                          <li>• 3+ years of experience in the field</li>
-                          <li>• Strong communication skills</li>
-                          <li>• Ability to work in a team environment</li>
-                          <li>• Remote work capability</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Benefits</h4>
-                        <ul className="space-y-1 sm:space-y-1.5 mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
-                          <li>• Competitive salary and equity</li>
-                          <li>• Health, dental, and vision insurance</li>
-                          <li>• Flexible work hours</li>
-                          <li>• Professional development budget</li>
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Company Culture</h4>
-                        <p className="mobile-text-sm leading-relaxed line-clamp-3" style={{ color: 'rgb(var(--text-secondary))' }}>
-                          {currentJob.company} is a fast-growing company with a collaborative culture. 
-                          We value innovation, diversity, and work-life balance.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Tap to Flip Back Hint */}
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-40">
-                      <div className="text-center">
-                        <div className="text-sm sm:text-base">👆</div>
-                        <div className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Tap to go back</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex justify-center space-x-4 sm:space-x-6 mobile-padding">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => handleSwipe('left')}
-          disabled={isCardFlipped}
-          className={`w-14 h-14 sm:w-16 sm:h-16 backdrop-blur-sm border rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow ${
-            isCardFlipped 
-              ? 'bg-gray-400 border-gray-300 cursor-not-allowed' 
-              : 'secondary-gradient border-gray-300'
-          }`}
-        >
-          <X className={`w-6 h-6 sm:w-7 sm:h-7 ${isCardFlipped ? 'text-gray-500' : 'text-white'}`} />
-        </motion.button>
-        
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => handleSwipe('right')}
-          disabled={isCardFlipped}
-          className={`w-14 h-14 sm:w-16 sm:h-16 backdrop-blur-sm border rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow ${
-            isCardFlipped 
-              ? 'bg-gray-400 border-gray-300 cursor-not-allowed' 
-              : 'success-gradient border-green-300'
-          }`}
-        >
-          <Heart className={`w-6 h-6 sm:w-7 sm:h-7 ${isCardFlipped ? 'text-gray-500' : 'text-white'}`} />
-        </motion.button>
-      </div>
-
-      {/* Flip Hint */}
-      {!isCardFlipped && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center mobile-text-sm mb-4"
-          style={{ color: 'rgb(var(--text-muted))' }}
-        >
-          💡 Tap the card to see more details
-        </motion.div>
-      )}
-
-      {/* Match Confirmation */}
-      <AnimatePresence>
-        {showMatch && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-blue-50/50" />
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-                className="w-14 h-14 sm:w-20 sm:h-20 success-gradient rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
-              >
-                <Heart className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
-              </motion.div>
-              <motion.h3
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-xl sm:text-2xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}
-              >
-                You Applied!
-              </motion.h3>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}
-              >
-                Your application has been sent to <span className="font-semibold text-blue-600">{currentJob.company}</span>
-              </motion.p>
-              <motion.button
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowMatch(false)}
-                className="mobile-button glass-button primary-gradient text-white font-semibold"
-              >
-                Continue
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Swipe Limit Modal */}
-      <AnimatePresence>
-        {showSwipeLimit && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 to-orange-50/50" />
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="w-14 h-14 sm:w-20 sm:h-20 warning-gradient rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
-              >
-                <Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
-              </motion.div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Swipe Limit Reached</h3>
-              <p className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>
-                You've used all {mockUser.swipesLimit} free swipes for today. Upgrade to Pro for unlimited swipes!
-              </p>
-              <div className="space-y-3">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setShowPremiumUpsell(true)}
-                  className="w-full mobile-button glass-button warning-gradient text-white font-semibold"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 warning-gradient text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium flex-shrink-0"
                 >
-                  Upgrade to Pro - $4.99/mo
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowSwipeLimit(false)}
-                  className="w-full mobile-button glass-button secondary-gradient text-white font-semibold"
-                >
-                  Maybe Later
+                  $4.99/mo
                 </motion.button>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
 
-      {/* Premium Upsell Modal */}
-      <AnimatePresence>
-        {showPremiumUpsell && (
+        {/* Job Card */}
+        <div className="mobile-container flex-1 flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentJob.id}
+              initial={{ scale: 0.9, opacity: 0, y: 10 }}
+              animate={{ 
+                scale: 1, 
+                opacity: 1,
+                y: 0,
+                rotate: swipeDirection === 'left' ? -15 : swipeDirection === 'right' ? 15 : 0,
+                x: swipeDirection === 'left' ? -800 : swipeDirection === 'right' ? 800 : 0
+              }}
+              exit={{ scale: 0.9, opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, type: "spring", stiffness: 300, damping: 30 }}
+              whileHover={{ scale: 1.01 }}
+              className="w-full max-w-[280px] sm:max-w-[320px] perspective-1000"
+              {...handlers}
+            >
+              <div 
+                className="swipe-card relative cursor-pointer overflow-hidden"
+                onClick={handleCardClick}
+              >
+                {/* Featured/Urgent Badge */}
+                {(currentJob.isFeatured || currentJob.urgent) && (
+                  <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20">
+                    {currentJob.isFeatured && (
+                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium flex items-center space-x-1">
+                        <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                        <span>Featured</span>
+                      </div>
+                    )}
+                    {currentJob.urgent && (
+                      <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium mt-1 sm:mt-2">
+                        Urgent Hire
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Swipe Overlay */}
+                {swipeDirection && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className={`absolute inset-0 flex items-center justify-center text-3xl sm:text-4xl font-bold z-20 ${
+                      swipeDirection === 'left' 
+                        ? 'bg-red-500/10 text-red-600' 
+                        : 'bg-green-500/10 text-green-600'
+                    }`}
+                  >
+                    {swipeDirection === 'left' ? '❌' : '✅'}
+                  </motion.div>
+                )}
+
+                {/* Card Container with Flip Animation */}
+                <motion.div
+                  animate={{ rotateY: isCardFlipped ? 180 : 0 }}
+                  transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
+                  className="w-full h-full relative"
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  {/* Front Side */}
+                  <div className="absolute inset-0 w-full h-full backface-hidden">
+                    <div className="p-4 sm:p-5 h-full flex flex-col relative">
+                      {/* Background */}
+                      <div className="absolute inset-0 rounded-xl sm:rounded-2xl" style={{ background: 'rgb(var(--card-bg) / 0.95)' }} />
+                      
+                      {/* Company Logo */}
+                      <div className="text-right mb-3 sm:mb-4 relative z-10">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 primary-gradient rounded-lg sm:rounded-xl flex items-center justify-center text-xl sm:text-2xl shadow-sm">
+                          {currentJob.logo}
+                        </div>
+                      </div>
+
+                      {/* Job Info */}
+                      <div className="flex-1 relative z-10">
+                        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 leading-tight" style={{ color: 'rgb(var(--text-primary))' }}>{currentJob.title}</h2>
+                        
+                        <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+                          <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                              <Building className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                            </div>
+                            <span className="font-medium mobile-text-sm truncate">{currentJob.company}</span>
+                          </div>
+                          
+                          <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                              <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            </div>
+                            <span className="font-medium mobile-text-sm truncate">{currentJob.location}</span>
+                          </div>
+                          
+                          <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
+                            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                              <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
+                            </div>
+                            <span className="font-medium mobile-text-sm truncate">{currentJob.salary}</span>
+                          </div>
+                        </div>
+                        
+                        <p className="mb-3 sm:mb-4 leading-relaxed mobile-text-sm line-clamp-3" style={{ color: 'rgb(var(--text-secondary))' }}>{currentJob.description}</p>
+                        
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-1 sm:gap-1.5">
+                          {currentJob.tags.slice(0, 3).map((tag, index) => (
+                            <motion.span
+                              key={index}
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ delay: index * 0.05 }}
+                              className="primary-gradient text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium shadow-sm"
+                            >
+                              {tag}
+                            </motion.span>
+                          ))}
+                          {currentJob.tags.length > 3 && (
+                            <span className="text-xs px-2 py-1" style={{ color: 'rgb(var(--text-muted))' }}>+{currentJob.tags.length - 3} more</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Tap to Flip Hint */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-40">
+                        <div className="text-center">
+                          <div className="text-sm sm:text-base">👆</div>
+                          <div className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Tap for details</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Back Side */}
+                  <div className="absolute inset-0 w-full h-full backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
+                    <div className="p-4 sm:p-5 h-full flex flex-col relative">
+                      {/* Background */}
+                      <div className="absolute inset-0 rounded-xl sm:rounded-2xl" style={{ background: 'rgb(var(--card-bg) / 0.95)' }} />
+                      
+                      {/* Back Header */}
+                      <div className="text-center mb-3 sm:mb-4 relative z-10">
+                        <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Job Details</h3>
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 primary-gradient rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-xl mx-auto">
+                          {currentJob.logo}
+                        </div>
+                      </div>
+
+                      {/* Detailed Job Info */}
+                      <div className="flex-1 relative z-10 space-y-2 sm:space-y-3">
+                        <div>
+                          <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Requirements</h4>
+                          <ul className="space-y-1 sm:space-y-1.5 mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                            <li>• 3+ years of experience in the field</li>
+                            <li>• Strong communication skills</li>
+                            <li>• Ability to work in a team environment</li>
+                            <li>• Remote work capability</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Benefits</h4>
+                          <ul className="space-y-1 sm:space-y-1.5 mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                            <li>• Competitive salary and equity</li>
+                            <li>• Health, dental, and vision insurance</li>
+                            <li>• Flexible work hours</li>
+                            <li>• Professional development budget</li>
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Company Culture</h4>
+                          <p className="mobile-text-sm leading-relaxed line-clamp-3" style={{ color: 'rgb(var(--text-secondary))' }}>
+                            {currentJob.company} is a fast-growing company with a collaborative culture. 
+                            We value innovation, diversity, and work-life balance.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Tap to Flip Back Hint */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-40">
+                        <div className="text-center">
+                          <div className="text-sm sm:text-base">👆</div>
+                          <div className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Tap to go back</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex justify-center space-x-4 sm:space-x-6 mobile-padding">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleSwipe('left')}
+            disabled={isCardFlipped}
+            className={`w-14 h-14 sm:w-16 sm:h-16 backdrop-blur-sm border rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow ${
+              isCardFlipped 
+                ? 'bg-gray-400 border-gray-300 cursor-not-allowed' 
+                : 'secondary-gradient border-gray-300'
+            }`}
+          >
+            <X className={`w-6 h-6 sm:w-7 sm:h-7 ${isCardFlipped ? 'text-gray-500' : 'text-white'}`} />
+          </motion.button>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleSwipe('right')}
+            disabled={isCardFlipped}
+            className={`w-14 h-14 sm:w-16 sm:h-16 backdrop-blur-sm border rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow ${
+              isCardFlipped 
+                ? 'bg-gray-400 border-gray-300 cursor-not-allowed' 
+                : 'success-gradient border-green-300'
+            }`}
+          >
+            <Heart className={`w-6 h-6 sm:w-7 sm:h-7 ${isCardFlipped ? 'text-gray-500' : 'text-white'}`} />
+          </motion.button>
+        </div>
+
+        {/* Flip Hint */}
+        {!isCardFlipped && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+            className="text-center mobile-text-sm mb-4"
+            style={{ color: 'rgb(var(--text-muted))' }}
           >
+            💡 Tap the card to see more details
+          </motion.div>
+        )}
+
+        {/* Match Confirmation */}
+        <AnimatePresence>
+          {showMatch && (
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 to-purple-50/50" />
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="w-14 h-14 sm:w-20 sm:h-20 warning-gradient rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
+                className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
               >
-                <Crown className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-blue-50/50" />
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                  className="w-14 h-14 sm:w-20 sm:h-20 success-gradient rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
+                >
+                  <Heart className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                </motion.div>
+                <motion.h3
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-xl sm:text-2xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}
+                >
+                  You Applied!
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}
+                >
+                  Your application has been sent to <span className="font-semibold text-blue-600">{currentJob.company}</span>
+                </motion.p>
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowMatch(false)}
+                  className="mobile-button glass-button primary-gradient text-white font-semibold"
+                >
+                  Continue
+                </motion.button>
               </motion.div>
-              <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Upgrade to Pro</h3>
-              <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 text-left">
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-600" />
-                  </div>
-                  <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Unlimited swipes per day</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Eye className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-600" />
-                  </div>
-                  <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>See who viewed your profile</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-600" />
-                  </div>
-                  <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Highlighted profile for recruiters</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-600" />
-                  </div>
-                  <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Auto-apply with saved resume</span>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowPremiumUpsell(false)}
-                  className="w-full mobile-button glass-button warning-gradient text-white font-semibold"
-                >
-                  Start Free Trial - $4.99/mo
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setShowPremiumUpsell(false)}
-                  className="w-full mobile-button glass-button secondary-gradient text-white font-semibold"
-                >
-                  Maybe Later
-                </motion.button>
-              </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
 
-      <BottomNavigation activeTab="home" />
-    </div>
+        {/* Swipe Limit Modal */}
+        <AnimatePresence>
+          {showSwipeLimit && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 to-orange-50/50" />
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="w-14 h-14 sm:w-20 sm:h-20 warning-gradient rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
+                >
+                  <Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                </motion.div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Swipe Limit Reached</h3>
+                <p className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>
+                  You've used all {mockUser.swipesLimit} free swipes for today. Upgrade to Pro for unlimited swipes!
+                </p>
+                <div className="space-y-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowPremiumUpsell(true)}
+                    className="w-full mobile-button glass-button warning-gradient text-white font-semibold"
+                  >
+                    Upgrade to Pro - $4.99/mo
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowSwipeLimit(false)}
+                    className="w-full mobile-button glass-button secondary-gradient text-white font-semibold"
+                  >
+                    Maybe Later
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Premium Upsell Modal */}
+        <AnimatePresence>
+          {showPremiumUpsell && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 to-purple-50/50" />
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="w-14 h-14 sm:w-20 sm:h-20 warning-gradient rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
+                >
+                  <Crown className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                </motion.div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Upgrade to Pro</h3>
+                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 text-left">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-600" />
+                    </div>
+                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Unlimited swipes per day</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Eye className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-600" />
+                    </div>
+                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>See who viewed your profile</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-600" />
+                    </div>
+                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Highlighted profile for recruiters</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-600" />
+                    </div>
+                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Auto-apply with saved resume</span>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowPremiumUpsell(false)}
+                    className="w-full mobile-button glass-button warning-gradient text-white font-semibold"
+                  >
+                    Start Free Trial - $4.99/mo
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowPremiumUpsell(false)}
+                    className="w-full mobile-button glass-button secondary-gradient text-white font-semibold"
+                  >
+                    Maybe Later
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Logout Confirmation Modal */}
+        <AnimatePresence>
+          {showLogoutConfirm && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="glass-card mobile-card text-center max-w-sm mx-4 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-red-50/50 to-orange-50/50" />
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="w-14 h-14 sm:w-20 sm:h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm"
+                >
+                  <LogOut className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
+                </motion.div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Sign Out</h3>
+                <p className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>
+                  Are you sure you want to sign out of your account?
+                </p>
+                <div className="space-y-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      logout()
+                      setShowLogoutConfirm(false)
+                    }}
+                    className="w-full mobile-button glass-button bg-red-500 text-white font-semibold"
+                  >
+                    Yes, Sign Out
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowLogoutConfirm(false)}
+                    className="w-full mobile-button glass-button secondary-gradient text-white font-semibold"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <BottomNavigation activeTab="home" />
+      </div>
+    </ProtectedRoute>
   )
 } 

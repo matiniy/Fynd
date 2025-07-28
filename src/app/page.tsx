@@ -1,116 +1,168 @@
 'use client'
 
-import React from 'react'
-import Link from 'next/link'
+import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Briefcase, Users, Sparkles } from 'lucide-react'
+import { Briefcase, Building, ArrowRight } from 'lucide-react'
+import { useAuth } from './contexts/AuthContext'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
-export default function WelcomePage() {
+export default function HomePage() {
+  const { user, loading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && user) {
+      // Redirect authenticated users to their appropriate dashboard
+      if (user.userType === 'recruiter') {
+        router.push('/recruiter/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
+    }
+  }, [user, loading, router])
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen gradient-bg flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <div className="w-16 h-16 sm:w-20 sm:h-20 primary-gradient rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          </div>
+          <h2 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>
+            Loading...
+          </h2>
+          <p className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+            Please wait while we check your account
+          </p>
+        </motion.div>
+      </div>
+    )
+  }
+
+  // If user is authenticated, don't render the welcome page
+  if (user) {
+    return null
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center mobile-padding relative overflow-hidden">
-      {/* Subtle background gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 via-blue-50/50 to-indigo-50/50" />
-      <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-16 h-16 sm:w-24 sm:h-24 bg-blue-200/20 rounded-full blur-xl" />
-      <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-20 h-20 sm:w-32 sm:h-32 bg-indigo-200/20 rounded-full blur-xl" />
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-48 sm:h-48 bg-gray-200/20 rounded-full blur-xl" />
-      
+    <div className="min-h-screen gradient-bg flex items-center justify-center mobile-padding">
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 text-center w-full max-w-sm sm:max-w-md"
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md text-center"
       >
-        {/* Logo */}
+        {/* Logo and Title */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-          className="mb-6 sm:mb-8"
+          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          className="w-20 h-20 sm:w-24 sm:h-24 primary-gradient rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg"
         >
-          <div className="w-14 h-14 sm:w-20 sm:h-20 primary-gradient rounded-xl sm:rounded-2xl flex items-center justify-center shadow-sm">
-            <Sparkles className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
-          </div>
+          <span className="text-3xl sm:text-4xl">🎯</span>
         </motion.div>
-
-        {/* Title */}
+        
         <motion.h1
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient mb-3 sm:mb-4"
+          transition={{ delay: 0.3 }}
+          className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-gradient"
         >
-          Fynd
+          Welcome to Fynd
         </motion.h1>
-
+        
         <motion.p
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 sm:mb-12 max-w-xs sm:max-w-md mx-auto leading-relaxed"
+          transition={{ delay: 0.4 }}
+          className="text-lg sm:text-xl mb-8 mobile-text-base"
+          style={{ color: 'rgb(var(--text-secondary))' }}
         >
-          Job search made simple. Swipe your way to your dream career.
+          The Tinder-style job search platform that makes finding your dream job as easy as swiping right.
         </motion.p>
 
         {/* User Type Selection */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="mobile-space-y max-w-sm mx-auto"
+          transition={{ delay: 0.5 }}
+          className="space-y-4 mb-8"
         >
-          <Link href="/signup-jobseeker">
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              className="glass-card mobile-card cursor-pointer group"
-            >
-              <div className="flex items-center space-x-3 sm:space-x-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 primary-gradient rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4" style={{ color: 'rgb(var(--text-primary))' }}>
+            I am a...
+          </h2>
+          
+          <div className="space-y-4">
+            <Link href="/signup?type=jobseeker">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="mobile-card glass-card p-6 sm:p-8 border-2 border-transparent hover:border-blue-500/50 transition-all duration-200 cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 primary-gradient rounded-xl flex items-center justify-center">
+                      <Briefcase className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-lg sm:text-xl font-semibold mb-1" style={{ color: 'rgb(var(--text-primary))' }}>
+                        Job Seeker
+                      </h3>
+                      <p className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                        Find your dream job with smart matching
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'rgb(var(--text-muted))' }} />
                 </div>
-                <div className="text-left flex-1 min-w-0">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Job Seeker</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">Find your perfect job match</p>
+              </motion.div>
+            </Link>
+            
+            <Link href="/signup?type=recruiter">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="mobile-card glass-card p-6 sm:p-8 border-2 border-transparent hover:border-blue-500/50 transition-all duration-200 cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 primary-gradient rounded-xl flex items-center justify-center">
+                      <Building className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-lg sm:text-xl font-semibold mb-1" style={{ color: 'rgb(var(--text-primary))' }}>
+                        Recruiter
+                      </h3>
+                      <p className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                        Post jobs and find top talent
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: 'rgb(var(--text-muted))' }} />
                 </div>
-              </div>
-            </motion.div>
-          </Link>
-
-          <Link href="/recruiter/dashboard">
-            <motion.div
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              className="glass-card mobile-card cursor-pointer group"
-            >
-              <div className="flex items-center space-x-3 sm:space-x-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 secondary-gradient rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                </div>
-                <div className="text-left flex-1 min-w-0">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Recruiter</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">Find the perfect candidate</p>
-                </div>
-              </div>
-            </motion.div>
-          </Link>
+              </motion.div>
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Get Started Button */}
+        {/* Sign In Link */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="mt-6 sm:mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
         >
-          <Link href="/signup-jobseeker">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="mobile-button-lg glass-button primary-gradient text-white font-semibold shadow-sm w-full sm:w-auto"
-            >
-              Get Started
-            </motion.button>
-          </Link>
+          <p className="mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>
+            Already have an account?{' '}
+            <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+              Sign in here
+            </Link>
+          </p>
         </motion.div>
       </motion.div>
     </div>
