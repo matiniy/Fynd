@@ -71,32 +71,22 @@
 
 @layer components {
   .glass-card {
-    @apply backdrop-blur-sm border rounded-xl sm:rounded-2xl shadow-sm;
-    background: rgb(var(--card-bg) / 0.9);
-    border-color: rgb(var(--card-border) / 0.5);
+    @apply bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-xl sm:rounded-2xl shadow-sm;
   }
   
   .glass-button {
-    @apply backdrop-blur-sm border rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-medium shadow-sm transition-all duration-200 text-sm sm:text-base;
-    background: rgb(var(--card-bg) / 0.9);
-    border-color: rgb(var(--card-border) / 0.5);
-  }
-  
-  .glass-button:hover {
-    background: rgb(var(--card-bg) / 0.95);
+    @apply bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 font-medium shadow-sm hover:bg-white/95 transition-all duration-200 text-sm sm:text-base;
   }
   
   .gradient-bg {
-    background: linear-gradient(135deg, rgb(var(--bg-primary)), rgb(var(--bg-secondary)), rgb(var(--bg-accent)));
+    @apply bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50;
   }
   
   .swipe-card {
-    @apply relative w-full max-w-[280px] sm:max-w-[320px] mx-auto backdrop-blur-sm border rounded-xl sm:rounded-2xl shadow-sm overflow-hidden;
+    @apply relative w-full max-w-[280px] sm:max-w-[320px] mx-auto bg-white/90 backdrop-blur-sm border border-gray-200/50 rounded-xl sm:rounded-2xl shadow-sm overflow-hidden;
     transform-style: preserve-3d;
     min-height: 320px;
     max-height: 400px;
-    background: rgb(var(--card-bg) / 0.95);
-    border-color: rgb(var(--card-border) / 0.5);
   }
   
   .perspective-1000 {
@@ -121,9 +111,7 @@
   }
   
   .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 backdrop-blur-sm border-t z-50;
-    background: rgb(var(--card-bg) / 0.9);
-    border-color: rgb(var(--border-primary) / 0.5);
+    @apply fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-200/50 z-50;
     padding-bottom: env(safe-area-inset-bottom);
   }
   
@@ -137,7 +125,7 @@
   }
   
   .nav-item:not(.active) {
-    color: rgb(var(--text-secondary));
+    @apply text-gray-600;
   }
 
   /* Mobile-optimized containers */
@@ -210,13 +198,13 @@
     padding-right: env(safe-area-inset-right);
   }
 
-  /* Professional color scheme */
+  /* Original color scheme */
   .text-gradient {
-    @apply bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent;
   }
   
   .primary-gradient {
-    @apply bg-gradient-to-r from-blue-500 to-indigo-600;
+    @apply bg-gradient-to-r from-pink-500 to-purple-600;
   }
 
   .secondary-gradient {

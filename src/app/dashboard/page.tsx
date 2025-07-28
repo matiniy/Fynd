@@ -176,10 +176,10 @@ export default function Dashboard() {
   if (currentJobIndex >= mockJobs.length) {
     return (
       <ProtectedRoute userType="jobseeker">
-        <div className="min-h-screen gradient-bg pb-20 safe-area-bottom">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 pb-20 safe-area-bottom">
           <div className="mobile-padding">
             <h1 className="text-xl sm:text-2xl font-bold text-gradient mb-2">Find Your Dream Job</h1>
-            <p className="mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>Swipe through job opportunities</p>
+            <p className="text-gray-600 mb-6 mobile-text-base">Swipe through job opportunities</p>
           </div>
           
           <div className="flex items-center justify-center h-48 sm:h-64">
@@ -191,8 +191,8 @@ export default function Dashboard() {
               >
                 <Star className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </motion.div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>No More Jobs</h3>
-              <p className="mobile-text-base mb-4" style={{ color: 'rgb(var(--text-secondary))' }}>You've seen all available jobs for today</p>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">No More Jobs</h3>
+              <p className="text-gray-600 mb-4 mobile-text-base">You've seen all available jobs for today</p>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -211,22 +211,22 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute userType="jobseeker">
-      <div className="min-h-screen gradient-bg pb-20 safe-area-bottom">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 pb-20 safe-area-bottom">
         {/* Header with User Info and Logout */}
         <div className="mobile-padding">
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1 min-w-0">
               <h1 className="text-xl sm:text-2xl font-bold text-gradient">Find Your Dream Job</h1>
-              <p className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Swipe through job opportunities</p>
+              <p className="text-gray-600 mobile-text-sm">Swipe through job opportunities</p>
             </div>
             <div className="flex items-center space-x-3">
               {/* User Info */}
               <div className="text-right flex-shrink-0">
                 <div className="flex items-center space-x-2">
                   {!mockUser.isPremium && (
-                    <div className="flex items-center space-x-1 glass-card rounded-full px-2 sm:px-3 py-1">
+                    <div className="flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1 border border-gray-200/50">
                       <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
-                      <span className="text-xs sm:text-sm font-medium" style={{ color: 'rgb(var(--text-secondary))' }}>
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">
                         {mockUser.swipesRemaining}/{mockUser.swipesLimit}
                       </span>
                     </div>
@@ -246,9 +246,8 @@ export default function Dashboard() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowLogoutConfirm(true)}
                 className="w-8 h-8 sm:w-10 sm:h-10 glass-card rounded-full flex items-center justify-center"
-                style={{ color: 'rgb(var(--text-secondary))' }}
               >
-                <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
               </motion.button>
             </div>
           </div>
@@ -266,8 +265,8 @@ export default function Dashboard() {
                     <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold mobile-text-base" style={{ color: 'rgb(var(--text-primary))' }}>Upgrade to Pro</h3>
-                    <p className="text-xs sm:text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Unlimited swipes & premium features</p>
+                    <h3 className="font-semibold text-gray-800 mobile-text-base">Upgrade to Pro</h3>
+                    <p className="text-xs sm:text-sm text-gray-600">Unlimited swipes & premium features</p>
                   </div>
                 </div>
                 <motion.button
@@ -349,7 +348,7 @@ export default function Dashboard() {
                   <div className="absolute inset-0 w-full h-full backface-hidden">
                     <div className="p-4 sm:p-5 h-full flex flex-col relative">
                       {/* Background */}
-                      <div className="absolute inset-0 rounded-xl sm:rounded-2xl" style={{ background: 'rgb(var(--card-bg) / 0.95)' }} />
+                      <div className="absolute inset-0 bg-white/95 rounded-xl sm:rounded-2xl" />
                       
                       {/* Company Logo */}
                       <div className="text-right mb-3 sm:mb-4 relative z-10">
@@ -360,24 +359,24 @@ export default function Dashboard() {
 
                       {/* Job Info */}
                       <div className="flex-1 relative z-10">
-                        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 leading-tight" style={{ color: 'rgb(var(--text-primary))' }}>{currentJob.title}</h2>
+                        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-2 sm:mb-3 leading-tight">{currentJob.title}</h2>
                         
                         <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
-                          <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
+                          <div className="flex items-center text-gray-600">
                             <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
                               <Building className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                             </div>
                             <span className="font-medium mobile-text-sm truncate">{currentJob.company}</span>
                           </div>
                           
-                          <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
+                          <div className="flex items-center text-gray-600">
                             <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
                               <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                             </div>
                             <span className="font-medium mobile-text-sm truncate">{currentJob.location}</span>
                           </div>
                           
-                          <div className="flex items-center" style={{ color: 'rgb(var(--text-secondary))' }}>
+                          <div className="flex items-center text-gray-600">
                             <div className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-100 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
                               <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
                             </div>
@@ -385,7 +384,7 @@ export default function Dashboard() {
                           </div>
                         </div>
                         
-                        <p className="mb-3 sm:mb-4 leading-relaxed mobile-text-sm line-clamp-3" style={{ color: 'rgb(var(--text-secondary))' }}>{currentJob.description}</p>
+                        <p className="text-gray-700 mb-3 sm:mb-4 leading-relaxed mobile-text-sm line-clamp-3">{currentJob.description}</p>
                         
                         {/* Tags */}
                         <div className="flex flex-wrap gap-1 sm:gap-1.5">
@@ -401,7 +400,7 @@ export default function Dashboard() {
                             </motion.span>
                           ))}
                           {currentJob.tags.length > 3 && (
-                            <span className="text-xs px-2 py-1" style={{ color: 'rgb(var(--text-muted))' }}>+{currentJob.tags.length - 3} more</span>
+                            <span className="text-xs text-gray-500 px-2 py-1">+{currentJob.tags.length - 3} more</span>
                           )}
                         </div>
                       </div>
@@ -410,7 +409,7 @@ export default function Dashboard() {
                       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-40">
                         <div className="text-center">
                           <div className="text-sm sm:text-base">👆</div>
-                          <div className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Tap for details</div>
+                          <div className="text-xs text-gray-500">Tap for details</div>
                         </div>
                       </div>
                     </div>
@@ -420,11 +419,11 @@ export default function Dashboard() {
                   <div className="absolute inset-0 w-full h-full backface-hidden" style={{ transform: 'rotateY(180deg)' }}>
                     <div className="p-4 sm:p-5 h-full flex flex-col relative">
                       {/* Background */}
-                      <div className="absolute inset-0 rounded-xl sm:rounded-2xl" style={{ background: 'rgb(var(--card-bg) / 0.95)' }} />
+                      <div className="absolute inset-0 bg-gray-50/95 rounded-xl sm:rounded-2xl" />
                       
                       {/* Back Header */}
                       <div className="text-center mb-3 sm:mb-4 relative z-10">
-                        <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Job Details</h3>
+                        <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-800 mb-2">Job Details</h3>
                         <div className="w-8 h-8 sm:w-10 sm:h-10 primary-gradient rounded-lg sm:rounded-xl flex items-center justify-center text-lg sm:text-xl mx-auto">
                           {currentJob.logo}
                         </div>
@@ -433,8 +432,8 @@ export default function Dashboard() {
                       {/* Detailed Job Info */}
                       <div className="flex-1 relative z-10 space-y-2 sm:space-y-3">
                         <div>
-                          <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Requirements</h4>
-                          <ul className="space-y-1 sm:space-y-1.5 mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                          <h4 className="text-sm sm:text-base font-semibold text-gray-800 mb-1 sm:mb-2">Requirements</h4>
+                          <ul className="text-gray-700 space-y-1 sm:space-y-1.5 mobile-text-sm">
                             <li>• 3+ years of experience in the field</li>
                             <li>• Strong communication skills</li>
                             <li>• Ability to work in a team environment</li>
@@ -443,8 +442,8 @@ export default function Dashboard() {
                         </div>
                         
                         <div>
-                          <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Benefits</h4>
-                          <ul className="space-y-1 sm:space-y-1.5 mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>
+                          <h4 className="text-sm sm:text-base font-semibold text-gray-800 mb-1 sm:mb-2">Benefits</h4>
+                          <ul className="text-gray-700 space-y-1 sm:space-y-1.5 mobile-text-sm">
                             <li>• Competitive salary and equity</li>
                             <li>• Health, dental, and vision insurance</li>
                             <li>• Flexible work hours</li>
@@ -453,8 +452,8 @@ export default function Dashboard() {
                         </div>
                         
                         <div>
-                          <h4 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Company Culture</h4>
-                          <p className="mobile-text-sm leading-relaxed line-clamp-3" style={{ color: 'rgb(var(--text-secondary))' }}>
+                          <h4 className="text-sm sm:text-base font-semibold text-gray-800 mb-1 sm:mb-2">Company Culture</h4>
+                          <p className="text-gray-700 mobile-text-sm leading-relaxed line-clamp-3">
                             {currentJob.company} is a fast-growing company with a collaborative culture. 
                             We value innovation, diversity, and work-life balance.
                           </p>
@@ -465,7 +464,7 @@ export default function Dashboard() {
                       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 opacity-40">
                         <div className="text-center">
                           <div className="text-sm sm:text-base">👆</div>
-                          <div className="text-xs" style={{ color: 'rgb(var(--text-muted))' }}>Tap to go back</div>
+                          <div className="text-xs text-gray-500">Tap to go back</div>
                         </div>
                       </div>
                     </div>
@@ -512,8 +511,7 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center mobile-text-sm mb-4"
-            style={{ color: 'rgb(var(--text-muted))' }}
+            className="text-center text-gray-500 mobile-text-sm mb-4"
           >
             💡 Tap the card to see more details
           </motion.div>
@@ -546,7 +544,7 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="text-xl sm:text-2xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}
+                  className="text-xl sm:text-2xl font-bold text-gray-800 mb-2"
                 >
                   You Applied!
                 </motion.h3>
@@ -554,7 +552,7 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}
+                  className="text-gray-600 mb-4 sm:mb-6 mobile-text-base"
                 >
                   Your application has been sent to <span className="font-semibold text-blue-600">{currentJob.company}</span>
                 </motion.p>
@@ -596,8 +594,8 @@ export default function Dashboard() {
                 >
                   <Lock className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
                 </motion.div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Swipe Limit Reached</h3>
-                <p className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Swipe Limit Reached</h3>
+                <p className="text-gray-600 mb-4 sm:mb-6 mobile-text-base">
                   You've used all {mockUser.swipesLimit} free swipes for today. Upgrade to Pro for unlimited swipes!
                 </p>
                 <div className="space-y-3">
@@ -645,31 +643,31 @@ export default function Dashboard() {
                 >
                   <Crown className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
                 </motion.div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Upgrade to Pro</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Upgrade to Pro</h3>
                 <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 text-left">
                   <div className="flex items-center space-x-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-600" />
                     </div>
-                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Unlimited swipes per day</span>
+                    <span className="text-gray-700 mobile-text-sm">Unlimited swipes per day</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <Eye className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-600" />
                     </div>
-                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>See who viewed your profile</span>
+                    <span className="text-gray-700 mobile-text-sm">See who viewed your profile</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-600" />
                     </div>
-                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Highlighted profile for recruiters</span>
+                    <span className="text-gray-700 mobile-text-sm">Highlighted profile for recruiters</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-600" />
                     </div>
-                    <span className="mobile-text-sm" style={{ color: 'rgb(var(--text-secondary))' }}>Auto-apply with saved resume</span>
+                    <span className="text-gray-700 mobile-text-sm">Auto-apply with saved resume</span>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -717,8 +715,8 @@ export default function Dashboard() {
                 >
                   <LogOut className="w-7 h-7 sm:w-10 sm:h-10 text-white" />
                 </motion.div>
-                <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'rgb(var(--text-primary))' }}>Sign Out</h3>
-                <p className="mb-4 sm:mb-6 mobile-text-base" style={{ color: 'rgb(var(--text-secondary))' }}>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Sign Out</h3>
+                <p className="text-gray-600 mb-4 sm:mb-6 mobile-text-base">
                   Are you sure you want to sign out of your account?
                 </p>
                 <div className="space-y-3">
